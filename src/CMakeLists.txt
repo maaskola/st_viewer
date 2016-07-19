@@ -201,12 +201,22 @@ if(UNIX AND NOT APPLE)
     endif()
 
     # Install libraries and resources
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE DESTINATION .)
-    install(FILES ${CMAKE_SOURCE_DIR}/REPLACE_QT_LIBRARIES DESTINATION .)
-    install(FILES ${CMAKE_SOURCE_DIR}/DEPENDENCIES DESTINATION .)
-    install(FILES ${CONFIG_FILE} DESTINATION .)
-    install(FILES ${PUBLICKEY} DESTINATION .)
-    install(TARGETS ${PROJECT_NAME} DESTINATION .)
+    if(APPLE)
+      set(BIN_DIR ".")
+      set(ETC_DIR ".")
+      set(MISC_DIR ".")
+    else()
+      set(BIN_DIR "bin")
+      set(ETC_DIR "etc/${PROJECT_NAME}")
+      set(MISC_DIR "share/${PROJECT_NAME}")
+    endif()
+
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE DESTINATION ${MISC_DIR})
+    install(FILES ${CMAKE_SOURCE_DIR}/REPLACE_QT_LIBRARIES DESTINATION ${MISC_DIR})
+    install(FILES ${CMAKE_SOURCE_DIR}/DEPENDENCIES DESTINATION ${MISC_DIR})
+    install(FILES ${CONFIG_FILE} DESTINATION ${ETC_DIR})
+    install(FILES ${PUBLICKEY} DESTINATION ${ETC_DIR})
+    install(TARGETS ${PROJECT_NAME} DESTINATION ${BIN_DIR})
 
 endif()
 
