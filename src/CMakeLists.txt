@@ -176,19 +176,29 @@ if(UNIX AND NOT APPLE)
        # note there is also the targets: LOCATION_RELEASE and LOCATION_DEBUG
        # but I think we don't need them /Erik Sjolund
        get_target_property(ST_QT_LOC "Qt5::${QT_LIBRARY}" LOCATION)
-       INSTALL_LIBRARY_AND_SYMLINKS("${ST_QT_LOC}" lib)
+       if(COPY_SYSTEM_LIBRARIES)
+         INSTALL_LIBRARY_AND_SYMLINKS("${ST_QT_LOC}" lib)
+       endif()
      endforeach()
 
     # Qt needs ICU libraries in Linux
-    foreach(ICU_LIB icuuc icui18n icudata)
-      find_library(loc${ICU_LIB} lib${ICU_LIB}.so NO_CMAKE_SYSTEM_PATH)
+    foreach(ICU_LIB ${ST_ICU_LIBS})
+      if(COPY_SYSTEM_LIBRARIES)
+        find_library(loc${ICU_LIB} lib${ICU_LIB}.so NO_CMAKE_SYSTEM_PATH)
+      else()
+        find_library(loc${ICU_LIB} lib${ICU_LIB}.so)
+      endif()
       if (NOT loc${ICU_LIB})
         message(FATAL_ERROR "Could not find lib${ICU_LIB}.so")
       endif()
-      INSTALL_LIBRARY_AND_SYMLINKS("${loc${ICU_LIB}}" lib)
+      if(COPY_SYSTEM_LIBRARIES)
+        INSTALL_LIBRARY_AND_SYMLINKS("${loc${ICU_LIB}}" lib)
+      endif()
     endforeach()
 
-    deploy_qt_plugins()
+    if(COPY_SYSTEM_LIBRARIES)
+      deploy_qt_plugins()
+    endif()
 
     # Install libraries and resources
     install(FILES ${CMAKE_SOURCE_DIR}/LICENSE DESTINATION .)

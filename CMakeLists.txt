@@ -14,6 +14,7 @@ set(PROJECT_VENDOR "Jose Fernandez Navarro")
 
 set(CONFIG_FILE "${PROJECT_SOURCE_DIR}/assets/stviewer.conf" CACHE STRING
     "The file with the network configuration settings")
+set(COPY_SYSTEM_LIBRARIES false)
 
 # print main variables
 message(STATUS)
@@ -28,6 +29,7 @@ message(STATUS "CMAKE_PREFIX_PATH = ${CMAKE_PREFIX_PATH}")
 message(STATUS "TARGET_ARCH = ${TARGET_ARCH}")
 message(STATUS "VERSION = ${PROJECT_VERSION}")
 message(STATUS "CONFIGURATION FILE = ${CONFIG_FILE}")
+message(STATUS "COPY_SYSTEM_LIBRARIES = ${COPY_SYSTEM_LIBRARIES}")
 message(STATUS
 "-------------------------------------------------------------------------------"
 )
@@ -86,6 +88,7 @@ include_directories(${PROJECT_BINARY_DIR})
 # Find the path to Qt binaries and set the Qt libraries
 find_package(Qt5LinguistTools REQUIRED CONFIG)
 set(ST_QT_LIBS  Widgets PrintSupport Network Core Gui OpenGL Concurrent)
+set(ST_ICU_LIBS icuuc icui18n icudata)
 if(UNIX AND NOT APPLE)
   list(APPEND ST_QT_LIBS DBus Svg)
 endif()
